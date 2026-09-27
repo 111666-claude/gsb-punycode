@@ -23,10 +23,9 @@ python3 -m unittest discover -s tests -v
 
 ## 现在的行为
 
-- `encode_label` 拼完基本码点之后直接接扩展部分，**没有写 `-`**：`bücher` 给 `bcherkva`。
-- `adapt` 忽略入参、固定返回 72：短的标签（如 `mnchen-3ya`）解码碰巧正确，
-  但 `wgv71a119e`（`日本語`）解出来是乱码，编码长文本时扩展部分的数字也会算错。
-- `decode_label` 不校验尾随 `-`、不校验扩展部分是否合法、也不检查多余的 `-`。
+- `encode_label` 在基本码点后写 `-` 再接扩展部分：`bücher` 给 `bcher-kva`，纯 ASCII 给 `abc-`。
+- `adapt` 按 RFC 3492 的公式随 delta 衰减：`wgv71a119e` 正确解出 `日本語`。
+- `decode_label` 校验 `-` 位置（不能在开头）、扩展部分数字与截断，报错带字符偏移。
 
 ## 计划新增的能力
 
